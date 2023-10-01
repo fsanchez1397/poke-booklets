@@ -10,7 +10,9 @@ import { UilCheckCircle } from '@iconscout/react-unicons'
 // For development:
 // const serverAddress = import.meta.env.VITE_DEV_URL;
 // For production:
-const serverAddress = import.meta.env.VITE_PROD_URL;
+// const serverAddress = import.meta.env.VITE_PROD_URL;
+// For dev production:
+const serverAddress = import.meta.env.VITE_DEV_PROD_URL;
 
 export default function GetBooklets() {
   const [isDeleted, setIsDeleted] = useState(false);
