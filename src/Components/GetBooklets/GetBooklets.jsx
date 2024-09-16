@@ -4,15 +4,21 @@ import DraggablePictureTwo from "../DraggablePictureTwo/DraggablePictureTwo";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
+import { UilCheckCircle } from '@iconscout/react-unicons'
 
-const serverAddress = import.meta.env.VITE_PROD_URL;
-// const serverAddress = import.meta.env.VITE_DEV_URL
-// const serverAddress = import.meta.env.VITE_DEV_PROD_URL;
+// Define the server address based on your environment
+// For development:
+// const serverAddress = import.meta.env.VITE_DEV_URL;
+// For production:
+// const serverAddress = import.meta.env.VITE_PROD_URL;
+// For dev production:
+const serverAddress = import.meta.env.VITE_DEV_PROD_URL;
 
 export default function GetBooklets() {
   const [isDeleted, setIsDeleted] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [bookletData, setBookletData] = useState([]);
+  const [book, setBook] = useState([]); // Assuming this state is used elsewhere
 
   useEffect(() => {
     axios.get(`${serverAddress}/api/users`).then((res) => {
@@ -42,57 +48,33 @@ export default function GetBooklets() {
   for (let i = 0; i < bookletData.length; i += chunkSize) {
     let chunk = bookletData.slice(i, i + chunkSize);
     temp.push(
-      <div className="lg:flex caret-transparent lg:justify-between">
-        {chunk.map((item) => (
-          <div className="text-neutral-700 text-sm lg:flex lg:justify-center lg:items-center lg: mx-2">
+      <div className="lg:flex caret-transparent lg:justify-between" key={i}>
+        {chunk.map((item, index) => (
+          <div className="text-neutral-700 text-sm lg:flex lg:justify-center lg:items-center lg: mx-2" key={index}>
             <div>
               <div className="flex justify-center lg:px-8">
                 {item.userName}'s party
-                {/* <button Link>Edit</button> */}
-                {/* <button
-                  onClick={() => {
-                    const shouldDelete = window.confirm(
-                      "Are you sure you want to delete this booklet?"
-                    );
-                    if (shouldDelete) {
-                      axios
-                        .delete(`${serverAddress}/api/booklet/${item.id}`)
-                        .then((res) => {
-                          toast("Booklet deleted successfully!");
-                          // console.log(temp);
-                          setIsDeleted(true);
-                        });
-                    }
-                  }}
-                >
-                  Delete
-                </button> */}
               </div>
               <div className="card__book card__book__width mt-2 max-w-[320px] lg:max-w-[510px] mx-auto">
-                <div className="card__slot">
-                  {item.cardData[0] != null ? 
-                  <DraggablePictureTwo src={item.cardData[0].pokemonCard} id={item.cardData[0].id} /> : null}
-                </div>
-                <div className="card__slot">
-                {item.cardData[1] != null ? 
-                  <DraggablePictureTwo src={item.cardData[1].pokemonCard} id={item.cardData[1].id} /> : null}
-                </div>
-                <div className="card__slot">
-                {item.cardData[2] != null ? 
-                  <DraggablePictureTwo src={item.cardData[2].pokemonCard} id={item.cardData[2].id} /> : null}
-                </div>
-                <div className="card__slot">
-                {item.cardData[3] != null ? 
-                  <DraggablePictureTwo src={item.cardData[3].pokemonCard} id={item.cardData[3].id} /> : null}
-                </div>
-                <div className="card__slot">
-                {item.cardData[4] != null ? 
-                  <DraggablePictureTwo src={item.cardData[4].pokemonCard} id={item.cardData[4].id} /> : null}
-                </div>
-                <div className="card__slot">
-                {item.cardData[5] != null ? 
-                  <DraggablePictureTwo src={item.cardData[5].pokemonCard} id={item.cardData[5].id} /> : null}
-                </div>
+                {[...Array(6)].map((_, index) => (
+                  <div className="card__slot" key={index}>
+                    {item.cardData.length > index && (
+                      <>
+                        <div className="group relative">
+                          <DraggablePictureTwo
+                            src={item.cardData[index].pokemonCard}
+                            id={item.cardData[index].id}
+                          />
+                          {item.cardData[index].verified === true ? (
+                            <div className="bg-blue-500 absolute ml-[5rem] top-[7rem] lg:ml-36 lg:top-[12.5rem] lg:left-[-5px] rounded-xl transform scale-100 group-hover:scale-150 group-hover:translate-x-[1rem] lg:group-hover:translate-x-[2rem] group-hover:translate-y-6 lg:group-hover:translate-y-10 transition-transform duration-300 text-white">
+                              <UilCheckCircle />
+                            </div>
+                          ) : null}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -109,16 +91,14 @@ export default function GetBooklets() {
           <Link to={"/create"} className="px-4">Create Yours!</Link>
         </div>
       </div>
-      {/* <div className="text-neutral-700 text-xs rounded-lg flex text-left items-center w-6/12 mb-12 lg:items-center lg:justify-center lg:text-center mx-auto"></div> */}
-      <div className="text-neutral-700 text-xs rounded-lg flex mt-6 mb-8 lg:mb-12  w-10/12 lg:w-6/12 lg:items-center lg:justify-center text-left mx-auto">
+      <div className="text-neutral-700 text-xs rounded-lg flex mt-6 mb-8 lg:mb-12 w-10/12 lg:w-6/12 lg:items-center lg:justify-center text-left mx-auto">
         Poke Booklets is for people who want to interact with others over their
         Pokemon card collectibles through their digital booklets!
       </div>
       {temp.length > 0 ? (
-        temp.map((item) => {
-          // console.log(item);
-          return item;
-        })
+        temp.map((item, index) => (
+          <div key={index}>{item}</div>
+        ))
       ) : (
         <div className="loader"></div>
       )}

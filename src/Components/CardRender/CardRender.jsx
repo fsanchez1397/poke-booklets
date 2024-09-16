@@ -4,19 +4,19 @@ import "react-toastify/dist/ReactToastify.css";
 import SearchCard from "../SearchCard/SearchCard";
 import CreateBooklet from "../CreateBooklet/CreateBooklet";
 
-const serverAddress = import.meta.env.VITE_PROD_URL
+// const serverAddress = import.meta.env.VITE_PROD_URL
 // const serverAddress = import.meta.env.VITE_DEV_URL;
-// const serverAddress = import.meta.env.VITE_DEV_PROD_URL;
+const serverAddress = import.meta.env.VITE_DEV_PROD_URL;
 
 export default function CardRender() {
   const [userName, setUserName] = useState("");
   const [book, setBook] = useState([]);
   const [card, setCard] = useState([]);
   const [poke, setPoke] = useState("");
-//---------------------------------------new implement---------------------------------------
-  const [reload, setReload] = useState(false);
-//---------------------------------------end new implement---------------------------------------
+//cardInfo = cardData
+const [cardInfo, setCardInfo] = useState([]);
 
+const [reload, setReload] = useState(false);
   // useEffect(() => {
   //   console.log("THE INFO HAS PERSISTED OMG: ", localStorage.ID)
   // })
@@ -37,7 +37,7 @@ export default function CardRender() {
           {/* <button className="bg-orange-300 rounded-xl p-2 text-xs caret-transparent">Save</button> */}
           </div>
           <SearchCard serverAddress={serverAddress} setBook={setBook} book={book} setUserName={setUserName} userName={userName} toast={toast} newArray={newArray} setCard={setCard} poke={poke} setPoke={setPoke} reload={reload} setReload={setReload}/>
-          <CreateBooklet setBook={setBook} book={book} setUserName={setUserName} userName={userName} toast={toast} newArray={newArray} setCard={setCard} poke={poke} setPoke={setPoke} serverAddress={serverAddress} reload={reload} setReload={setReload}/>
+          <CreateBooklet setBook={setBook} book={book} setUserName={setUserName} userName={userName} toast={toast} newArray={newArray} setCard={setCard} poke={poke} setPoke={setPoke} serverAddress={serverAddress} reload={reload} setReload={setReload} cardInfo={cardInfo} setCardInfo={setCardInfo}/>
         </div>
       </div>
     </>
